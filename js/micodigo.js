@@ -23,7 +23,7 @@ $(document).ready(
 								
 								var elemento = respuestaServer.registros[i];	
 								inmuebles[elemento['id']] = elemento;
-								$elmt_li = $('<li data-theme="a" data-icon="plus"></li>');
+								$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
 								console.log(elemento['post_title']);
 								$elmt_a = $('<a id="inmueble-a'+i+'" onclick="almaceneIdInmueble('+elemento['id']+')" href="#infoinmueble"></a>');
 								//$elmt_img = $('<img src="'+elemento['imagen']+'">');
