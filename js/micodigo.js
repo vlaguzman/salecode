@@ -26,17 +26,11 @@ $(document).ready(
 								$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
 								console.log(elemento['post_title']);
 								$elmt_a = $('<a id="inmueble-a'+i+'" onclick="almaceneIdInmueble('+elemento['id']+')" href="#infoinmueble"></a>');
-								//$elmt_img = $('<img src="'+elemento['imagen']+'">');
 								$elmt_h4 = $('<h4>'+elemento['post_title']+'</h4>');
 								$elmt_p = $('<p>'+elemento['post_content']+'</p>');		
-								//$elmt_span = $('<span id="evento-'+i+'" class="ui-li-count">'+elemento['registros']+'</span>');
-								//$elmt_a2 = $('<a id="btn-enrl-'+elemento['id']+'" class="links-plus" onclick="almaceneIdPosEvento('+elemento['id']+', '+i+')" href="#'+elemento['estado']+'" data-rel="popup" data-position-to="window" data-transition="pop">Enrolarme</a>');
-								//$elmt_a.append($elmt_img);
 								$elmt_a.append($elmt_h4);
 								$elmt_a.append($elmt_p);
-								//$elmt_a.append($elmt_span);
 								$elmt_li.append($elmt_a);
-								//$elmt_li.append($elmt_a2);
 								$('#lista-inmuebles').append($elmt_li);
 							};
 
@@ -51,16 +45,11 @@ $(document).ready(
 
 
 function almaceneIdInmueble(in_id){
-	
 	localStorage["id_inm"] = in_id;
-	//inmueble = elemento;
-	//console.log(inmueble['post_title']);
-	
 }
 
 $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	// recolecta los valores que inserto el usuario
-    //console.log(inmueble['post_title']);
   	archivoDetalleInmueble = url_base + url_detalle_inmueble;
   	
   	var e = inmuebles[localStorage["id_inm"]];
@@ -84,15 +73,13 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 				var elemento = respuestaServer2.registros[i];			
 
 		 		if ( getTitle(elemento['key']) != "None" ) {
-		            $elmt_hd = $('<h4>'+getTitle(elemento['key'])+'</h4>');
-		 			$('#datos-top article').append($elmt_hd);
 		 			if ( getTitle(elemento['key']) == "Imagen" ) {
-		 				$('#datos-top article img').attr("src", getImageUrl(elemento['value']));
-
-		 				//$elmt_img = $('<img src="'+getImageUrl(elemento['value'])+'">');
-					    //$('#datos-top article').append($elmt_img);	 
+		 				$('#datos-top article img').attr("src", getImageUrl(elemento['value']));	 
 		 			}
 		 			else{
+		 				$elmt_hd = $('<h4>'+getTitle(elemento['key'])+'</h4>');
+		 			    $('#datos-top article').append($elmt_hd);
+
 						$elmt_p1 = $('<p>'+elemento['value']+'</p>');	
 					    $('#datos-top article').append($elmt_p1);	 
 				    };			
