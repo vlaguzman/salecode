@@ -1,0 +1,44 @@
+.nav-glyphish-example .ui-btn .ui-btn-inner { 
+	padding-top: 40px !important; 
+}
+
+.nav-glyphish-example .ui-btn .ui-icon { 
+	width: 30px!important; 
+	height: 30px!important; 
+	margin-left: -15px !important; 
+	box-shadow: none!important; 
+	-moz-box-shadow: none!important; 
+	-webkit-box-shadow: none!important; 
+	-webkit-border-radius: none !important; 
+	border-radius: none !important; 
+}
+
+#home .principal-content{
+	background: url(../img/salecode.png) 50% no-repeat; 
+	min-height: 23em;
+
+}
+
+#email .ui-icon { 
+	background:  url(../img/glyphish-icons/18-envelope.png) 50% 50% no-repeat; 
+	background-size: 24px 16px;  
+}
+
+#call .ui-icon { 
+	background:  url(../img/glyphish-icons/75-phone.png) 50% 50% no-repeat;  
+	background-size: 22px 27px; 
+}
+
+#home .ui-icon { 
+	background:  url(../img/glyphish-icons/53-house.png) 50% 50% no-repeat;  
+	background-size: 22px 22px; 
+}
+
+#lista-inmuebles .ui-btn-text a img{
+	height: 80px;
+	width: 80px;
+}
+
+.hide{
+	display: none !important;
+}
