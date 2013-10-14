@@ -18,7 +18,6 @@ $(document).ready(
 					.done(function(respuestaServer) {
 						if(respuestaServer.validacion == "ok"){
 							temp_reg = respuestaServer.registros;
-							console.log("Temp: "+temp_reg);
 							for (var i = 0; i < respuestaServer.registros.length; i++) {
 								var elemento = respuestaServer.registros[i];	
 								properties[elemento['id']] = elemento;
@@ -38,7 +37,6 @@ function createList(){
 	$('#lista-inmuebles li').remove();
 	$elmt_lidiv = $('<li data-role="list-divider">Inmuebles</li>');
 	$('#lista-inmuebles').append($elmt_lidiv);
-	console.log("Temp size: "+temp_reg.length);
 	for (var i = 0; i < temp_reg.length; i++) {
 		var elemento = temp_reg[i];	
 		$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
@@ -65,9 +63,7 @@ function getDetails(id_property){
 	$.getJSON( archivoDetalleInmueble, { id_inmueble:id_property})
 	.done(function(respuestaServer2) {
 		if(respuestaServer2.validacion == "ok"){
-		    property_details[id_property] = respuestaServer2.registros; 
-
-		    console.log("listo id: "+id_property+" details: "+ property_details[id_property]);	  
+		    property_details[id_property] = respuestaServer2.registros;   
 		}else{
 		  document.getElementById("msj-error").innerHTML="Correo electrónico o contraseña incorrectos";
 		}
@@ -78,14 +74,13 @@ function getDetails(id_property){
 function getImageProperty(id_property){
 
 	registros = property_details[id_property];
-
-	console.log("id: "+id_property+" registros: "+ registros);
 	for (var i = 0; i < registros.length; i++) {	
 		var elemento = registros[i];			
 
  		if ( getTitle(elemento['key']) != "None" ) {
  			if ( getTitle(elemento['key']) == "Imagen" ) {
- 				return getImageUrl(elemento['value']);	 
+ 				var array_images = getImageUrl(elemento['value']);
+ 				return array_images[0];	 
  			};		
  		};
 	}
@@ -99,20 +94,41 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	registros = property_details[localStorage["id_inm"]];
     $('#datos-top article').empty();
 	$('#loader-inmueble').hide();
+
 	$elmt_h = $('<h4> Titulo </h4>');
 	$('#datos-top article').append($elmt_h);
 	$elmt_p = $('<p>'+e['post_title']+'</p>');	
 	$('#datos-top article').append($elmt_p);	
-		
-	$elmt_img = $('<img>');
-	$('#datos-top article').append($elmt_img);	
+ 
+ 	$('#datos-top section .flexslider .slides li').empty();
+        	
+	$elmt_li = $('<li id="galery_li1">');
+	$elmt_li2 = $('<li id="galery_li2">');
+	$elmt_li3 = $('<li id="galery_li3">');
+
+	$('#datos-top .slider .flexslider .slides').append($elmt_li);
+	$('#datos-top .slider .flexslider .slides').append($elmt_li2);
+	$('#datos-top .slider .flexslider .slides').append($elmt_li3);
+
+	$elmt_img = $('<img id="img1">');
+	$('#datos-top section ul li#galery_li1').append($elmt_img);	
+
+	$elmt_img2 = $('<img id="img2">');
+	$('#datos-top section ul li#galery_li2').append($elmt_img2);	
+
+	$elmt_img3 = $('<img id="img3">');
+	$('#datos-top section ul li#galery_li3').append($elmt_img3);	
+
 
 	for (var i = 0; i < registros.length; i++) {	
 		var elemento = registros[i];			
 
  		if ( getTitle(elemento['key']) != "None" ) {
  			if ( getTitle(elemento['key']) == "Imagen" ) {
- 				$('#datos-top article img').attr("src", getImageUrl(elemento['value']));	 
+ 				var array_images = getImageUrl(elemento['value']);
+ 				$('#datos-top section img#img1').attr("src", array_images[0]);
+ 				$('#datos-top section img#img2').attr("src", array_images[1]);
+ 				$('#datos-top section img#img3').attr("src", array_images[2]);
  			}
  			else{
  				$elmt_hd = $('<h4>'+getTitle(elemento['key'])+'</h4>');
@@ -129,6 +145,8 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 
  	$elmt_p = $('<p>'+e['post_content']+'</p>');	
 	$('#datos-top article').append($elmt_p);
+
+	loadSlider();
 
 	return false;
 })
@@ -158,11 +176,34 @@ function getTitle(tag){
 	return title;
 }
 
+function loadSlider(){
+      $('.flexslider').flexslider({
+        animation: "slide",
+        start: function(slider){
+          $('body').removeClass('loading');
+        }
+      });
+}
+
 function getImageUrl(text){
-  url = "";
-  var n = text.indexOf("http");
-  var porcion = text.substring(n);
-  var n = porcion.indexOf("\"");
-  var url = porcion.substring(0, n);
+  var url = new Array();
+  
+  var init = text.indexOf("http");
+  var partial = text.substring(init);
+  var fin = partial.indexOf("\"");
+  url[0] = partial.substring(0, fin);
+
+  var text2 = partial.substring(fin);
+  var init2  = text2.indexOf("http");
+  var partial2 = text2.substring(init2);
+  var fin2 = partial2.indexOf("\"");
+  url[1] = partial2.substring(0, fin2);
+
+  var text3 = partial2.substring(fin2);
+  var init3  = text3.indexOf("http");
+  var partial3 = text3.substring(init3);
+  var fin3 = partial3.indexOf("\"");
+  url[2] = partial3.substring(0, fin3);
+
   return url;
 }
