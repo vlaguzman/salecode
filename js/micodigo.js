@@ -27,7 +27,7 @@ $(document).ready(
 						}else{
 							document.getElementById("msj-error").innerHTML="No ha sido posible obtener la información. Verifique su conexión a internet e intenete abrir la aplicación nuevamente.";
 						}
-				}).done( setTimeout("createList()",5000) );
+				}).done( setTimeout("createList()",7000) );
 			});
 
 
@@ -51,7 +51,7 @@ function createList(){
 		$elmt_li.append($elmt_a);
 		$('#lista-inmuebles').append($elmt_li);
 	};
-	setTimeout("updteList()",500);
+	setTimeout("updteList()",1500);
 
 }
 
