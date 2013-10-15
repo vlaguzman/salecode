@@ -25,7 +25,7 @@ $(document).ready(
 							};
 
 						}else{
-							document.getElementById("msj-error").innerHTML="Correo electrónico o contraseña incorrectos";
+							document.getElementById("msj-error").innerHTML="No ha sido posible obtener la información. Verifique su conexión a internet e intenete abrir la aplicación nuevamente.";
 						}
 				}).done( setTimeout("createList()",3500) );
 			});
@@ -66,7 +66,7 @@ function getDetails(id_property){
 		if(respuestaServer2.validacion == "ok"){
 		    property_details[id_property] = respuestaServer2.registros;   
 		}else{
-		  document.getElementById("msj-error").innerHTML="Correo electrónico o contraseña incorrectos";
+		  document.getElementById("msj-error").innerHTML="No ha sido posible obtener los detalles de los inmuebles. Verifique su conexión a internet e intente abrir la aplicación nuevamente.";
 		}
 	})
 
