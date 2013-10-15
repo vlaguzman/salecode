@@ -27,7 +27,7 @@ $(document).ready(
 						}else{
 							document.getElementById("msj-error").innerHTML="No ha sido posible obtener la información. Verifique su conexión a internet e intenete abrir la aplicación nuevamente.";
 						}
-				}).done( setTimeout("createList()",3500) );
+				}).done( setTimeout("createList()",5000) );
 			});
 
 
@@ -51,7 +51,12 @@ function createList(){
 		$elmt_li.append($elmt_a);
 		$('#lista-inmuebles').append($elmt_li);
 	};
-	$("#lista-inmuebles").listview('refresh');
+	setTimeout("updteList()",500);
+
+}
+
+function updteList(){
+  $("#lista-inmuebles").listview('refresh');
 }
 
 function almaceneIdInmueble(in_id){

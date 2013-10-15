@@ -18,6 +18,6 @@
         Vladimir Guzmán Mendoza
     </author>
 
-    <icon src="img/logo.png" gap:role="default" />
+    <icon src="img/logo-512.png" gap:role="default" />
 
 </widget>
