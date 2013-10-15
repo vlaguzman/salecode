@@ -34,8 +34,9 @@ $(document).ready(
 function createList(){
     $("#loader-home").hide();
     $('.ui-listview-filter').removeClass('hide');
+    $('#home .principal-content').addClass('no-background');
 	$('#lista-inmuebles li').remove();
-	$elmt_lidiv = $('<li data-role="list-divider">Inmuebles</li>');
+	$elmt_lidiv = $('<li data-role="list-divider">Ofertas</li>');
 	$('#lista-inmuebles').append($elmt_lidiv);
 	for (var i = 0; i < temp_reg.length; i++) {
 		var elemento = temp_reg[i];	
@@ -89,6 +90,7 @@ function getImageProperty(id_property){
 
 $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	// recolecta los valores que inserto el usuario
+
   	archivoDetalleInmueble = url_base + url_detalle_inmueble;  	
   	var e = properties[localStorage["id_inm"]];
 	registros = property_details[localStorage["id_inm"]];
@@ -99,6 +101,11 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	$('#datos-top article').append($elmt_h);
 	$elmt_p = $('<p>'+e['post_title']+'</p>');	
 	$('#datos-top article').append($elmt_p);	
+
+	$elmt_h = $('<h4> Descripción </h4>');
+ 	$('#datos-top article').append($elmt_h);
+ 	$elmt_p = $('<p>'+e['post_content']+'</p>');	
+	$('#datos-top article').append($elmt_p);
  
  	$('#datos-top section .flexslider .slides li').empty();
         	
@@ -140,11 +147,7 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
  		};
 	}
 
-	$elmt_h = $('<h4> Descripción </h4>');
- 	$('#datos-top article').append($elmt_h);
 
- 	$elmt_p = $('<p>'+e['post_content']+'</p>');	
-	$('#datos-top article').append($elmt_p);
 
 	loadSlider();
 

@@ -14,9 +14,13 @@
 }
 
 #home .principal-content{
-	background: url(../img/salecode.png) 50% no-repeat; 
-	min-height: 23em;
+	background: url(../img/fondo.png) 50% no-repeat; 
+	min-height: 40em;
 
+}
+
+.no-background{
+	background: none !important;
 }
 
 #email .ui-icon { 
