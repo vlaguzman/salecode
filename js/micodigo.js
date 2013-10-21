@@ -7,36 +7,51 @@ var title = "";
 var properties = new Array();
 var property_details = new Array();
 var temp_reg = new Array();
+var first_error = true;
 
-$('#loader-home').hide();
 $(document).ready(
-	function(event, ui ){
-		    $('.ui-listview-filter').addClass('hide');
-		 	$('#loader-home').show();
-		 	archivoInmuebles = url_base + url_inmuebles;
-			 	$.getJSON( archivoInmuebles)
-					.done(function(respuestaServer) {
-						if(respuestaServer.validacion == "ok"){
-							temp_reg = respuestaServer.registros;
-							for (var i = 0; i < respuestaServer.registros.length; i++) {
-								var elemento = respuestaServer.registros[i];	
-								properties[elemento['id']] = elemento;
-								getDetails(elemento['id']);
-							};
+	function (event, ui ){
+		loadList();
+	}
+);
 
-						}else{
-							document.getElementById("msj-error").innerHTML="No ha sido posible obtener la información. Verifique su conexión a internet e intenete abrir la aplicación nuevamente.";
-						}
-				}).done( setTimeout("createList()",7000) );
-			});
+function reload(){
+  $('#error-wrap').remove();
+  loadList();
+}
 
+function loadList(){
+	    $('.ui-listview-filter').addClass('hide');
+	 	$('#loader-home').show();
+	 	archivoInmuebles = url_base + url_inmuebles;
+		 	$.getJSON( archivoInmuebles)
+				.done(function(respuestaServer) {
+					if(respuestaServer.validacion == "ok"){
+						temp_reg = respuestaServer.registros;
+						for (var i = 0; i < respuestaServer.registros.length; i++) {
+							var elemento = respuestaServer.registros[i];	
+							properties[elemento['id']] = elemento;
+							getDetails(elemento['id']);
+						};
+
+					}else{
+						$elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet e intenete abrir la aplicación nuevamente.</p>');
+						$('#error-wrap').append($elmt_p);
+					}
+			}).done( setTimeout("createList()",2000) )
+			.fail(function() {
+				$elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet.</p>');
+				$('#error-wrap').append($elmt_p);
+  			});
+		}
 
 function createList(){
+  try{	
     $("#loader-home").hide();
     $('.ui-listview-filter').removeClass('hide');
     $('#home .principal-content').addClass('no-background');
 	$('#lista-inmuebles li').remove();
-	$elmt_lidiv = $('<li data-role="list-divider">Ofertas</li>');
+	$elmt_lidiv = $('<li id="title-list" data-role="list-divider">Ofertas</li>');
 	$('#lista-inmuebles').append($elmt_lidiv);
 	for (var i = 0; i < temp_reg.length; i++) {
 		var elemento = temp_reg[i];	
@@ -51,7 +66,15 @@ function createList(){
 		$elmt_li.append($elmt_a);
 		$('#lista-inmuebles').append($elmt_li);
 	};
-	setTimeout("updteList()",1500);
+	setTimeout("updteList()",2500);
+  }
+  catch(err){
+    if (first_error) {
+      $elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet y haga click en recargar.</p>');
+	  $('#error-wrap').append($elmt_p);
+     };
+     first_error = false;
+  }
 
 }
 
@@ -71,24 +94,35 @@ function getDetails(id_property){
 		if(respuestaServer2.validacion == "ok"){
 		    property_details[id_property] = respuestaServer2.registros;   
 		}else{
-		  document.getElementById("msj-error").innerHTML="No ha sido posible obtener los detalles de los inmuebles. Verifique su conexión a internet e intente abrir la aplicación nuevamente.";
+		  if (first_error) {
+		    $elmt_p= $('<p id="msj-error">No ha sido posible obtener los detalles de los inmuebles. Verifique su conexión a internet e intente abrir la aplicación nuevamente.</p>');
+		    $('#error-wrap').append($elmt_p);
+           };
+          first_error = false;
 		}
 	})
 
 }
 
 function getImageProperty(id_property){
+	try{
+		registros = property_details[id_property];
+		for (var i = 0; i < registros.length; i++) {	
+			var elemento = registros[i];			
 
-	registros = property_details[id_property];
-	for (var i = 0; i < registros.length; i++) {	
-		var elemento = registros[i];			
-
- 		if ( getTitle(elemento['key']) != "None" ) {
- 			if ( getTitle(elemento['key']) == "Imagen" ) {
- 				var array_images = getImageUrl(elemento['value']);
- 				return array_images[0];	 
- 			};		
- 		};
+	 		if ( getTitle(elemento['key']) != "None" ) {
+	 			if ( getTitle(elemento['key']) == "Imagen" ) {
+	 				var array_images = getImageUrl(elemento['value']);
+	 				return array_images[0];	 
+	 			};		
+	 		};
+		}
+	}catch(err){
+        if (first_error) {
+		  $elmt_p= $('<p id="msj-error">No ha sido posible obtener todas las imagenes. Verifique su conexión a internet y haga click en recargar.</p>');
+		  $('#error-wrap').append($elmt_p);
+        };
+        first_error = false;
 	}
 }
 

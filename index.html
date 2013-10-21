@@ -29,14 +29,18 @@
 	<div data-role="page" data-theme="b" id="home">
 		<div data-role="header" >
 			<h1><img src="img/logoapp.png" alt="Logo SaleCode"></h1>
+			<a data-icon="refresh" data-theme="b" onclick="reload()" class="ui-btn-right">Recargar</a>
 		</div>
 
 		<div class="principal-content" data-role="content" data-theme="b">
 			<div id="loader-home"><img src="img/loader.gif" /></div>
+			<div id="error-wrap">
+				
+			</div>
 			<ul id="lista-inmuebles" data-role="listview" data-theme="b" data-filter="true" data-filter-placeholder="Digíta el SaleCode a consultar.">
 
 			</ul>
-			<p id="msj-error"></p>
+
 		</div>	
 
 		<div data-role="footer" class="ui-bar" data-position="fixed" data-id="footer1">
@@ -89,9 +93,6 @@
 	<script defer src="js/jquery.flexslider.js"></script>
 
 	  <script type="text/javascript">
-	    $(function(){
-	      SyntaxHighlighter.all();
-	    });
 	    $(window).load(function(){
 	      $('.flexslider').flexslider({
 	        animation: "slide",
@@ -101,11 +102,6 @@
 	      });
 	    });
 	  </script>
-
-	    <!-- Syntax Highlighter -->
-    <script type="text/javascript" src="js/shCore.js"></script>
-    <script type="text/javascript" src="js/shBrushXml.js"></script>
-    <script type="text/javascript" src="js/shBrushJScript.js"></script>
 
 </body>
 
