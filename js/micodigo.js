@@ -53,6 +53,10 @@ function createList(){
 	$('#lista-inmuebles li').remove();
 	$elmt_lidiv = $('<li id="title-list" data-role="list-divider">Ofertas</li>');
 	$('#lista-inmuebles').append($elmt_lidiv);
+	 if (temp_reg.length == 0) {
+      $elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet y haga click en recargar.</p>');
+	  $('#error-wrap').append($elmt_p);
+     };
 	for (var i = 0; i < temp_reg.length; i++) {
 		var elemento = temp_reg[i];	
 		$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
