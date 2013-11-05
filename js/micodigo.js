@@ -5,7 +5,11 @@ const url_detalle_inmueble = "demedetalleinmueble.php?jsoncallback=?";
 
 var title = "";
 var properties = new Array();
+var property_agency = new Array();
 var property_details = new Array();
+var agency_details = new Array();
+var property_agency_numbers = new Array(); 
+
 var temp_reg = new Array();
 var first_error = true;
 
@@ -15,9 +19,15 @@ $(document).ready(
 	}
 );
 
-function reload(){
-  $('#error-wrap').remove();
-  loadList();
+function validatePass(p1, p2) {
+	if (p1.value != p2.value) {
+		p2.setCustomValidity('Las dos contraseñas deben ser iguales.');
+	} else if (p1.value.length < 5) {
+		p2.setCustomValidity('La contraseña debe de ser mínimo 5 caracteres');
+	} else if (p1.value == p2.value){
+		p2.setCustomValidity('');
+	}
+
 }
 
 function loadList(){
@@ -32,6 +42,7 @@ function loadList(){
 							var elemento = respuestaServer.registros[i];	
 							properties[elemento['id']] = elemento;
 							getDetails(elemento['id']);
+							setTimeout("getAgency("+elemento['id']+")",3000);
 						};
 
 					}else{
@@ -43,7 +54,37 @@ function loadList(){
 				$elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet.</p>');
 				$('#error-wrap').append($elmt_p);
   			});
+
+  		
+
 		}
+
+function getAgency(id_property){
+	var id_agency = 0;
+	try{
+		registros = property_details[id_property];
+		for (var i = 0; i < registros.length; i++) {
+			var elemento = registros[i];
+	 			if (getTitle(elemento['key']) == "Agencia"){
+	 				text = elemento['value'];
+		        	var init = text.indexOf("\"");
+					var partial = text.substring(init+1);
+					var fin = partial.indexOf("\;");
+					agency = partial.substring(0, fin-1);
+					id_agency = parseInt(agency);
+					property_agency[id_property] = id_agency;
+					loadDetailsAgency(id_agency);
+		        };
+		}
+	}catch(err){
+	    if (first_error) {
+			  $elmt_p= $('<p id="msj-error">No ha sido posible obtener toda la información de las agencias. Verifique su conexión a internet y haga click en recargar.</p>');
+			  $('#error-wrap').append($elmt_p);
+	     };
+	    first_error = false;
+	}
+}
+
 
 function createList(){
   try{	
@@ -57,19 +98,19 @@ function createList(){
       $elmt_p= $('<p id="msj-error">No ha sido posible obtener la información. Verifique su conexión a internet y haga click en recargar.</p>');
 	  $('#error-wrap').append($elmt_p);
      };
-	for (var i = 0; i < temp_reg.length; i++) {
-		var elemento = temp_reg[i];	
-		$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
-		$elmt_a = $('<a id="inmueble-a'+i+'" onclick="almaceneIdInmueble('+elemento['id']+')" href="#infoinmueble"></a>');
-		$elmt_i = $('<img src='+ getImageProperty(elemento['id'])+'>');
-		$elmt_h4 = $('<h4>'+elemento['post_title']+'</h4>');
-		$elmt_p = $('<p>'+elemento['post_content']+'</p>');		
-		$elmt_a.append($elmt_i);
-		$elmt_a.append($elmt_h4);
-		$elmt_a.append($elmt_p);
-		$elmt_li.append($elmt_a);
-		$('#lista-inmuebles').append($elmt_li);
-	};
+  	for (var i = 0; i < temp_reg.length; i++) {
+  		var elemento = temp_reg[i];	
+	  	$elmt_li = $('<li data-theme="a" data-icon="arrow-r"></li>');
+	  	$elmt_a = $('<a id="inmueble-a'+i+'" onclick="almaceneIdInmueble('+elemento['id']+')" href="#infoinmueble"></a>');
+  		$elmt_i = $('<img src='+ getImageProperty(elemento['id'])+'>');
+	  	$elmt_h4 = $('<h4>'+elemento['post_title']+'</h4>');
+		  $elmt_p = $('<p>'+elemento['post_content']+'</p>');		
+		  $elmt_a.append($elmt_i);
+	  	$elmt_a.append($elmt_h4);
+  		$elmt_a.append($elmt_p);
+  		$elmt_li.append($elmt_a);
+  		$('#lista-inmuebles').append($elmt_li);
+  	};
 	setTimeout("updteList()",2500);
   }
   catch(err){
@@ -108,25 +149,42 @@ function getDetails(id_property){
 
 }
 
+function loadDetailsAgency(id_agency){
+	// recolecta los valores que inserto el usuario
+  	archivoDetalleInmueble = url_base + url_detalle_inmueble;
+	$.getJSON( archivoDetalleInmueble, { id_inmueble:id_agency})
+	.done(function(respuestaServer2) {
+		if(respuestaServer2.validacion == "ok"){
+		    agency_details[id_agency] = respuestaServer2.registros;   
+		}else{
+		  if (first_error) {
+		    $elmt_p= $('<p id="msj-error">No ha sido posible obtener los detalles de las agencias. Verifique su conexión a internet e intente abrir la aplicación nuevamente.</p>');
+		    $('#error-wrap').append($elmt_p);
+           };
+          first_error = false;
+		}
+	});
+}
+
 function getImageProperty(id_property){
 	try{
 		registros = property_details[id_property];
-		for (var i = 0; i < registros.length; i++) {	
-			var elemento = registros[i];			
+		for (var i = 0; i < registros.length; i++) {
+			var elemento = registros[i];
 
 	 		if ( getTitle(elemento['key']) != "None" ) {
 	 			if ( getTitle(elemento['key']) == "Imagen" ) {
 	 				var array_images = getImageUrl(elemento['value']);
-	 				return array_images[0];	 
-	 			};		
+	 				return array_images[0];
+	 			}
 	 		};
 		}
 	}catch(err){
-        if (first_error) {
-		  $elmt_p= $('<p id="msj-error">No ha sido posible obtener todas las imagenes. Verifique su conexión a internet y haga click en recargar.</p>');
-		  $('#error-wrap').append($elmt_p);
-        };
-        first_error = false;
+	    if (first_error) {
+			  $elmt_p= $('<p id="msj-error">No ha sido posible obtener todas las imagenes. Verifique su conexión a internet y haga click en recargar.</p>');
+			  $('#error-wrap').append($elmt_p);
+	     };
+	    first_error = false;
 	}
 }
 
@@ -134,10 +192,23 @@ function getImageProperty(id_property){
 $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	// recolecta los valores que inserto el usuario
 
-  	archivoDetalleInmueble = url_base + url_detalle_inmueble;  	
-  	var e = properties[localStorage["id_inm"]];
+	archivoDetalleInmueble = url_base + url_detalle_inmueble;  	
+	var e = properties[localStorage["id_inm"]];
 	registros = property_details[localStorage["id_inm"]];
-    $('#datos-top article').empty();
+	var agency_id = property_agency[localStorage["id_inm"]];
+	
+	var agency_number = 1;
+	agengy_registers = agency_details[agency_id];
+	for (var i = 0; i < agengy_registers.length; i++) {
+		var elemento = agengy_registers[i];
+		if ( elemento['key'] == "_agency_phone" ) {
+		 	agency_number =  elemento['value'];
+		 }
+	}
+
+	$('#call').attr("href", "tel:"+agency_number);
+
+	$('#datos-top article').empty();
 	$('#loader-inmueble').hide();
 
 	$elmt_h = $('<h4> Titulo </h4>');
@@ -151,7 +222,6 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 	$('#datos-top article').append($elmt_p);
  
  	$('#datos-top section .flexslider .slides li').empty();
-        	
 	$elmt_li = $('<li id="galery_li1">');
 	$elmt_li2 = $('<li id="galery_li2">');
 	$elmt_li3 = $('<li id="galery_li3">');
@@ -180,6 +250,9 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
  				$('#datos-top section img#img2').attr("src", array_images[1]);
  				$('#datos-top section img#img3').attr("src", array_images[2]);
  			}
+ 			else if( getTitle(elemento['key']) == "Agencia" ){
+ 				//agencia = agency_details[];
+ 			}
  			else{
  				$elmt_hd = $('<h4>'+getTitle(elemento['key'])+'</h4>');
  			    $('#datos-top article').append($elmt_hd);
@@ -189,11 +262,7 @@ $( "#infoinmueble" ).on( "pageshow", function( event, ui ) {
 		    };			
  		};
 	}
-
-
-
 	loadSlider();
-
 	return false;
 })
 
@@ -215,6 +284,9 @@ function getTitle(tag){
 		  break;
 		case "_property_price":
 		  title = "Precio";
+		  break;
+		case "_property_agencies":
+		  title = "Agencia";
 		  break;
 		default:
 		  title = "None";
