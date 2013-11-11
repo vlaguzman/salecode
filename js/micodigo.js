@@ -19,16 +19,10 @@ $(document).ready(
 	}
 );
 
-function validatePass(p1, p2) {
-	if (p1.value != p2.value) {
-		p2.setCustomValidity('Las dos contraseñas deben ser iguales.');
-	} else if (p1.value.length < 5) {
-		p2.setCustomValidity('La contraseña debe de ser mínimo 5 caracteres');
-	} else if (p1.value == p2.value){
-		p2.setCustomValidity('');
-	}
-
-}
+$("#btn-reload").click(function() {
+  $('#error-wrap').empty();
+  loadList();
+});
 
 function loadList(){
 	    $('.ui-listview-filter').addClass('hide');
