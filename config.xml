@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
     <widget xmlns = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "co.salecode.phonegap"
+        id        = "co.salecode.app"
         versionCode="10" 
         version   = "1.0.0">
 
@@ -13,7 +13,9 @@
         Consulta información de una manera fácil y efectiva. 
         Los avisos de inmuebles y automóviles en venta ahora te dan toda la información que necesitas.
     </description>
-    <preference name="fullscreen" value="false" />
+    <preference name="orientation" value="portrait" />
+    <gap:splash src="img/splash-m.png" />
+    <preference name="fullscreen" value="true" />
     <author href="https://www.vlaguzman.com" email="guzman.vla@gmail.com">
         Vladimir Guzmán Mendoza
     </author>
